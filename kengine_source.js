@@ -1,5 +1,5 @@
 ﻿/*
- * K-engine v1.6
+ * K-engine v1.6.20120826
  * @author KevinFong<kenkyoken@163.com>
  */
 
@@ -362,12 +362,45 @@ var K_project = (function ($) {
                     break;
                     case 'movework':
 			_moveWork(effectParam);
-                    break;											
+                    break;
+                    case 'openeye':
+                        _openEye();
+                    break;    
 		}
             });			
 	};
 		
-		
+	var _openEye = function ()
+        {
+            $('#sp_bg').html('<div id="eyeup" class="eye"></div><div id="eyedown" class="eye"></div>');
+            $('#sp_bg').css('background','rgba(0,0,0,0.5)');
+            $('.eye').css({
+                'width' : parseInt(_width) + 'px',
+                'height' : (parseInt(_height) / 2) + 'px',
+                'background' : '#000',
+                'position' : 'absolute',         
+            });
+            $('#eyeup').css({
+                'top' : '0px',
+                'left' : '0px',
+                'box-shadow' : '0px 5px 11px #000'
+            });
+            $('#eyedown').css({
+                'bottom' : '0px',
+                'left' : '0px',
+                'box-shadow' : '0px -5px 11px #000'
+            });
+            _goNext = false;
+            $('#sp_bg').fadeTo(0,1);
+            $('.eye').animate({'height' : (parseInt(_height) / 2 * 0.8) + 'px'},1000).delay(200);
+            $('.eye').animate({'height' : (parseInt(_height) / 2) + 'px'},1000,function(){
+                $('#sp_bg').css('background','rgba(0,0,0,0)').delay(200);
+            });
+            $('.eye').animate({'height' : '0px','opacity': '0.5'},2500,function (){
+                _goNext = true;
+            });
+        };
+	
 	/**
 	 * 黑底白字淡入淡出效果
 	 * 
