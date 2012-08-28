@@ -130,6 +130,14 @@ var K_project = (function ($) {
      * @access private
      */
     var _goNext = true;
+    
+    /**
+     * 历史文本框开关
+     * 
+     * @var boolean
+     * @access private
+     */
+    var _history = false;
 		
     /**
      * 检查数组是否包含目标值
@@ -1081,7 +1089,7 @@ var K_project = (function ($) {
             });
             //ui层构筑
             $(_obj).prepend('<div id="ui"><div id="textarea"></div><div id="history"></div></div><button id="size">查看文本</button>');
-            $('#ui,#size,#textarea,#history').css('position','absolute');
+            $('#ui,#size,#textarea,#history,#close_h').css('position','absolute');
             $('#ui').css({
         	'width' : (parseInt(_width) - 40) + 'px',
         	'height' : (parseInt(_height) - 40) + 'px',
@@ -1114,7 +1122,8 @@ var K_project = (function ($) {
                 'overflow' : 'auto',
                 'display' : 'none'
             });
-            $('#ui').click(_dialog); 
+            $('#ui').click(_dialog);
+            $('#size').click(_viewHistory);
             for (var i = 1; i < 4; i++) 
             {
                 $('#ui').append('<div class="cha" id="cha' + i + '"><img id="cha' + i + 'cg"/></div>');
@@ -1147,7 +1156,23 @@ var K_project = (function ($) {
             }
 	};
 
-		
+    var _viewHistory = function (){
+        if (_history)
+        {
+            $('#history').fadeTo(500,0);
+            _history = false;
+            $('#size').text('查看文本');
+            $('#ui').click(_dialog);
+        }
+        else
+            {
+                $('#history').fadeTo(500,1);
+                _history = true;
+                $('#size').text('回到游戏');
+                $('#ui').unbind();
+            }
+    };
+    
     var _callbackObject = {
         /**
         * 脚本设置
