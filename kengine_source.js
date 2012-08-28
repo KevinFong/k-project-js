@@ -1,5 +1,5 @@
 ﻿/*
- * K-engine v1.6.20120826
+ * K-engine v1.6.20120828
  * @author KevinFong<kenkyoken@163.com>
  */
 
@@ -168,6 +168,7 @@ var K_project = (function ($) {
             {
             	_letter = w.split('');
             	_text = w;
+                $('#history').append('<p class="text">'+_text+'</p>');
             },
             toArea : function ()
             {
@@ -204,7 +205,7 @@ var K_project = (function ($) {
     })();	
     
     /**
-     * 剧本推演主函数
+     * 剧本推演主函数(cg,audio)
      *
      * @access private
      */
@@ -260,7 +261,7 @@ var K_project = (function ($) {
 	};    
     
         /**
-         * 文本处理&特效调用
+         * 文本处理&特效调用&选项处理
 	 * 
 	 * @access private
 	 */
@@ -303,8 +304,7 @@ var K_project = (function ($) {
 		$('#options').fadeIn();
 		return;
             }
-            $('#now').removeAttr("id");
-            $('#textarea').prepend('<p id="now" class="text"></p>');
+            $('#textarea').html('<p id="now" class="text"></p>');
             if (_script[_seq]['blackwork'] == 'true')
             {
 		$('.text').css('color','#444');
@@ -1080,8 +1080,8 @@ var K_project = (function ($) {
         	'z-index' : '1'	
             });
             //ui层构筑
-            $(_obj).prepend('<div id="ui"><div id="textarea"></div></div><button id="size">\u5c0f\u6587\u672c\u6846</button>');
-            $('#ui,#size,#textarea').css('position','absolute');
+            $(_obj).prepend('<div id="ui"><div id="textarea"></div><div id="history"></div></div><button id="size">查看文本</button>');
+            $('#ui,#size,#textarea,#history').css('position','absolute');
             $('#ui').css({
         	'width' : (parseInt(_width) - 40) + 'px',
         	'height' : (parseInt(_height) - 40) + 'px',
@@ -1098,16 +1098,23 @@ var K_project = (function ($) {
             });
             $('#textarea').css({
        		'width' : (parseInt(_width) - 40) + 'px',
-       		'height' : (parseInt(_height) - 40) + 'px',
+       		'height' : '150px',
        		'outline' : '1px #ccc solid',
        		'z-index' : '4',
        		'margin' : '0px',
        		'overflow' : 'auto',
        		'bottom' : '0px',
-       		'background-color' : 'rgba(0,0,0,0.10)'	
+       		'background-color' : 'rgba(0,0,0,0.1)'	
+            });
+            $('#history').css({
+        	'width' : (parseInt(_width) - 40) + 'px',
+        	'height' : (parseInt(_height) - 40) + 'px',
+                'background-color' : 'rgba(0,0,0,0.9)',
+                'z-index' : '100',
+                'overflow' : 'auto',
+                'display' : 'none'
             });
             $('#ui').click(_dialog); 
-            $('#size').click(_textareaSize);
             for (var i = 1; i < 4; i++) 
             {
                 $('#ui').append('<div class="cha" id="cha' + i + '"><img id="cha' + i + 'cg"/></div>');
@@ -1140,44 +1147,6 @@ var K_project = (function ($) {
             }
 	};
 
-	/**
-	 * 调整文本框大小
-	 * 
-	 * @access private
-	 */
-	var _textareaSize = function () 
-	{
-            if ($('#textarea').height() == (_height - 40))
-            {
-		$('#textarea').animate(
-                    {
-			height : '150px'
-                    },
-                    {
-			duration : 'fast',
-			complete : function () 
-			{
-                            $('#size').html('\u5927\u6587\u672c\u6846');
-			}
-                    }
-		);
-            }
-            else if ($('#textarea').height() == 150 )
-            {
-		$('#textarea').animate(
-                    {
-			height : (_height - 40) + 'px'
-                    },
-                    {
-			duration : 'fast',
-			complete : function ()
-			{
-                            $('#size').html('\u5c0f\u6587\u672c\u6846'); 
-			}	
-                    }
-		);
-            }		
-        };
 		
     var _callbackObject = {
         /**
