@@ -1,5 +1,5 @@
 /**
- * K-engine v1.6.20120911
+ * K-engine v1.6.20120912
  * @author KevinFong<kenkyoken@163.com>
  */
 
@@ -330,6 +330,7 @@ var K_project = (function($) {
      * 特效指派器
      *
      * @param array C_Event key为特效名 value为特效参数
+     * @access private
      */
     var _effectDispatcher = function(C_Event) {
             $.each(C_Event, function(effectName, effectParam) {
@@ -376,6 +377,13 @@ var K_project = (function($) {
             });
         };
 
+    /**
+     * 素材展示
+     * 在sp_bg层居中展示素材
+     *
+     * @param array Args 参数数组 target为素材资源号
+     * @access private
+     */
     var _itemShow = function(Args) {
             var _target = Args['target'];
             var _w = _itemsCache[_target].width;
@@ -497,6 +505,7 @@ var K_project = (function($) {
 
     /**
      * 文字群特效
+     * text为文字群 bg为起始背景色 animate为是否为动画形式
      *
      * @access private
      */
@@ -740,7 +749,7 @@ var K_project = (function($) {
             $('#sp_bg').fadeTo(100, 0.5);
             $('#sp_bg').fadeTo(100, 0).delay(500);
             $('#sp_bg').fadeTo(100, 0.7);
-            $('#sp_bg').fadeTo(1000, 0 ,function (){
+            $('#sp_bg').fadeTo(1000, 0, function() {
                 _goNext = true;
             });
         };
@@ -997,15 +1006,15 @@ var K_project = (function($) {
                     _itemsCache[Key].width = Val['height'];
                 }
             });
-        }
+        };
 
-        /**
-         * 缓存检查
-         * 完成后回调舞台构筑函数
-         *
-         * @access private
-         * @return boolean 缓存是否完成
-         */
+    /**
+     * 缓存检查
+     * 完成后回调舞台构筑函数
+     *
+     * @access private
+     * @return boolean 缓存是否完成
+     */
     var _checkCache = function() {
             var a = true;
             var b = true;
