@@ -1,5 +1,5 @@
 /**
- * K-engine v1.6.20120912
+ * K-engine v1.6.20120913
  * @author KevinFong<kenkyoken@163.com>
  */
 
@@ -373,8 +373,52 @@ var K_project = (function($) {
                 case 'itemshow':
                     _itemShow(effectParam);
                     break;
+                case 'blur':
+                    _blur(effectParam);
+                    break;
                 }
             });
+        };
+
+    /**
+     * 素材图片模糊显示
+     *
+     * @param array Args 参数数组 target:素材资源号 rtime:淡入时间
+     * @access private
+     */
+    var _blur = function(Args) {
+            var _target = Args['target'];
+            var _rtime = 1000;
+            if (typeof Args['rtime'] != 'undefined') {
+                _rtime = Args['rtime'];
+            }
+            var _obj = document.getElementById('cav_bg');
+            var _cav = _obj.getContext('2d');
+            var _backobj = document.createElement('canvas');
+            var _backcav = _backobj.getContext('2d');
+            _backobj.width = _itemsCache[Args].width;
+            _backobj.height = _itemsCache[Args].height;
+            _backcav.drawImage(_itemsCache[Args], 0, 0, _itemsCache[Args].width, _itemsCache[Args].height);
+            var _backImageData = _backcav.getImageData(0, 0, _itemsCache[Args].width, _itemsCache[Args].height);
+            var _allpx = _backImageData.data.length;
+            for (var _i = 0; _i < _allpx; _i += 4) {
+                var pw, ph;
+                if (_i <= _backImageData.width * 4) {
+                    pw = _i / 4;
+                    ph = 1;
+                } else {
+                    pw = (_i % (_backImageData.width * 4)) / 4;
+                    ph = Math.ceil(_i / (_backImageData.width * 4));
+                }
+                if ((pw % 2 == 0 && ph % 2 == 0) || pw == 0 || ph == 0) {
+                    _cav.beginPath();
+                    _cav.fillRect(pw - 5, ph - 2.5, 8, 8);
+                    _cav.fillStyle = "rgba(" + _backImageData.data[_i] + "," + _backImageData.data[_i + 1] + "," + _backImageData.data[_i + 2] + ",0.2)";
+                    _cav.fill();
+                    _cav.closePath();
+                }
+            }
+            $(_obj).fadeTo(_rtime, 1);
         };
 
     /**
@@ -464,6 +508,7 @@ var K_project = (function($) {
      * 黑底白字淡入淡出效果
      *
      * @param array Args text:文字, out:显示结束后是否淡出sp_bg层，默认为是
+     * @access private
      */
     var _moveWork = function(Args) {
             $('#sp_bg').html('<span id="movework" style="font-size:20px">' + Args['text'] + '</span>');
