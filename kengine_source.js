@@ -1,49 +1,49 @@
-ï»¿/*
- * K-engine v1.6.20120828
+/**
+ * K-engine v1.6.20120916
  * @author KevinFong<kenkyoken@163.com>
  */
 
-var K_project = (function ($) {
+var K_project = (function($) {
     /**
-     * æ¨æ¼”æ–‡æœ¬
-     * å†…å®¹ï¼š
-     * main:æ–‡æœ¬&å¯¹è¯,C_Cg:ç«‹ç»˜å›¾,C_Name:è§’è‰²å,C_Place:è§’è‰²ä½ç½®
+     * ÍÆÑİÎÄ±¾
+     * ÄÚÈİ£º
+     * main:ÎÄ±¾&¶Ô»°,C_Cg:Á¢»æÍ¼,C_Name:½ÇÉ«Ãû,C_Place:½ÇÉ«Î»ÖÃ
      *
      * @var object
-     * @access private    
+     * @access private
      */
     var _script;
 
     /**
-     * åœºæ™¯å
+     * ³¡¾°Ãû
      *
      * @var string
-     * @access private    
+     * @access private
      */
     var _name;
 
     /**
-     * ä¸»èˆå°å…ƒç´ 
+     * Ö÷ÎèÌ¨ÔªËØ
      *
      * @var object
-     * @access private    
+     * @access private
      */
     var _obj;
 
     /**
-     * èƒŒæ™¯åŠç‰¹æ•ˆ
-     * å†…å®¹:
-     * fn:æ–‡ä»¶è·¯å¾„,moveStart:ç§»åŠ¨èµ·å§‹ä½ç½®,moveEnd:ç§»åŠ¨ç»“æŸä½ç½®,oStart:èµ·å§‹é€æ˜åº¦,oEnd:ç»“æŸé€æ˜åº¦,rtime:è¿‡ç¨‹æ—¶é—´(å•ä½:ç§’)
+     * ±³¾°¼°ÌØĞ§
+     * ÄÚÈİ:
+     * fn:ÎÄ¼şÂ·¾¶,moveStart:ÒÆ¶¯ÆğÊ¼Î»ÖÃ,moveEnd:ÒÆ¶¯½áÊøÎ»ÖÃ,oStart:ÆğÊ¼Í¸Ã÷¶È,oEnd:½áÊøÍ¸Ã÷¶È,rtime:¹ı³ÌÊ±¼ä(µ¥Î»:Ãë)
      *
      * @var array
-     * @access private    
+     * @access private
      */
     var _bg = [];
 
     /**
-     * éŸ³æ•ˆ
-     * å†…å®¹ï¼š
-     * fn:æ–‡ä»¶è·¯å¾„,loop:1ä¸ºå¾ªç¯å…¶ä»–ä¸ºä¸å¾ªç¯
+     * ÒôĞ§
+     * ÄÚÈİ£º
+     * fn:ÎÄ¼şÂ·¾¶,loop:1ÎªÑ­»·ÆäËûÎª²»Ñ­»·
      *
      * @var array
      * @access private
@@ -51,1016 +51,1103 @@ var K_project = (function ($) {
     var _audio = [];
 
     /**
-     * ä¸»èˆå°å®½åº¦
+     * ËØ²Ä
+     * ?Èİ:
+     * fn:ÎÄ¼şÂ·?,width:?,height:¸ß
+     *
+     * @var array
+     * @access private
+     */
+    var _items = [];
+
+    /**
+     * Ö÷ÎèÌ¨¿í¶È
      *
      * @var int
-     * @access private    
+     * @access private
      */
     var _width;
 
     /**
-     * ä¸»èˆå°é«˜åº¦
+     * Ö÷ÎèÌ¨¸ß¶È
      *
      * @var int
-     * @access private    
+     * @access private
      */
     var _height;
 
     /**
-     * ä¸»èˆå°Xåæ ‡(ä¸­å¿ƒç‚¹)
+     * Ö÷ÎèÌ¨X×ø±ê(ÖĞĞÄµã)
      *
      * @var int
-     * @access private    
+     * @access private
      */
     var _x;
 
     /**
-     * ä¸»èˆå°Yåæ ‡(ä¸­å¿ƒç‚¹)
+     * Ö÷ÎèÌ¨Y×ø±ê(ÖĞĞÄµã)
      *
      * @var int
-     * @access private    
+     * @access private
      */
     var _y;
 
     /**
-     * ç«‹ç»˜ç¼“å­˜
+     * Á¢»æ»º´æ
      *
      * @var array
-     * @access private    
+     * @access private
      */
     var _cgCache = [];
 
     /**
-     * èƒŒæ™¯ç¼“å­˜
+     * ±³¾°»º´æ
      *
      * @var array
-     * @access private    
+     * @access private
      */
     var _bgCache = [];
-    
+
     /**
-     * éŸ³é¢‘ç¼“å­˜
+     * ÒôÆµ»º´æ
      *
      * @var array
      * @access private
      */
     var _auCache = [];
-    
+
     /**
-     * éŸ³é¢‘å›è°ƒ
-     * 
+     * ËØ²Ä?´æ
+     *
+     * @var array
+     @ access private
+     */
+    var _itemsCache = [];
+
+    /**
+     * ÒôÆµ»Øµ÷
+     *
      *
      * @var array
      * @access private
      */
-    var _auComplete =[];
-    
+    var _auComplete = [];
+
     /**
-     * æ–‡æœ¬é¡ºåºæŒ‡é’ˆ
+     * ÎÄ±¾Ë³ĞòÖ¸Õë
      *
      * @var int
-     * @access private    
+     * @access private
      */
     var _seq = 0;
-				
+
     /**
-     * æ˜¯å¦å…è®¸æ¨é€ä¸‹ä¸€å¥æ–‡æœ¬
+     * ÊÇ·ñÔÊĞíÍÆËÍÏÂÒ»¾äÎÄ±¾
      *
      * @var boolean
      * @access private
      */
     var _goNext = true;
-    
+
     /**
-     * å†å²æ–‡æœ¬æ¡†å¼€å…³
-     * 
+     * ÀúÊ·ÎÄ±¾¿ò¿ª¹Ø
+     *
      * @var boolean
      * @access private
      */
     var _history = false;
-		
+
+
+
     /**
-     * æ£€æŸ¥æ•°ç»„æ˜¯å¦åŒ…å«ç›®æ ‡å€¼
-     * 
+     * ¼ì²éÊı×éÊÇ·ñ°üº¬Ä¿±êÖµ
+     *
      * @access private
-     * @param string _val ç›®æ ‡å€¼
-     * @param array _array è¢«æ£€æŸ¥çš„æ•°ç»„
-     * @retrun boolean ç»“æœ
+     * @param string _val Ä¿±êÖµ
+     * @param array _array ±»¼ì²éµÄÊı×é
+     * @retrun boolean ½á¹û
      */
-     var in_array = function (_val,_array)
-     {
-        for (var _i = 0;_i < _array.length;_i++)
-        {
-            if (_array[_i] == _val)
-            {
-		return true;
+    var in_array = function(_val, _array) {
+            for (var _i = 0; _i < _array.length; _i++) {
+                if (_array[_i] == _val) {
+                    return true;
+                }
             }
-	}
-	return false;
-    };
-		
+            return false;
+        };
+
     /**
-     * æ–‡æœ¬æ¼”ç¤ºå¯¹è±¡
+     * ÎÄ±¾ÑİÊ¾¶ÔÏó
      *
      * @var object
      * @access private
      */
-    var _push=
-    (function(){
+    var _push = (function() {
         var _letter = [];
         var _i = 0;
-        var _t,_text;
-        var obj =
-        {
-            setLetter : function (w)
-            {
-            	_letter = w.split('');
-            	_text = w;
-                $('#history').append('<p class="text">'+_text+'</p>');
+        var _t, _text;
+        var obj = {
+            setLetter: function(w) {
+                _letter = w.split('');
+                _text = w;
+                $('#history').append('<p class="text">' + _text + '</p>');
             },
-            toArea : function ()
-            {
+            toArea: function() {
                 $('#ui').unbind();
-                if(_i < _letter.length)
-                {
-                    if (_goNext)
-                    {
-            		$('#ui').bind('click', _push.cut);
-                    }                	
-                    $('#now').append(_letter[_i]);
+                if (_i < _letter.length) {
+                    if (_goNext) {
+                        $('#ui').bind('click', _push.cut);
+                    }
+                    if (_letter[_i] == '|') $('#now').append('<br/>');
+                    else $('#now').append(_letter[_i]);
                     _i++;
-                    _t=setTimeout(_push.toArea, 50);
-                }
-                else 
-                {
+                    _t = setTimeout(_push.toArea, 50);
+                } else {
                     _i = 0;
                     _seq++;
                     clearTimeout(_t);
                     $('#ui').bind('click', _dialog);
                 }
             },
-            cut :function()
-            {
+            cut: function() {
                 clearTimeout(_t);
                 _i = 0;
                 _seq++;
+                _text = _text.replace(/\|/g, '<br/>');
                 $('#now').html(_text);
                 $('#ui').unbind();
                 $('#ui').bind('click', _dialog);
             }
         };
         return obj;
-    })();	
-    
+    })();
+
     /**
-     * å‰§æœ¬æ¨æ¼”ä¸»å‡½æ•°(cg,audio)
+     * ¾ç±¾ÍÆÑİÖ÷º¯Êı(cg,audio)
      *
      * @access private
      */
-    var _dialog = function ()
-    {
-	//åˆ¤æ–­å‰§æœ¬æ˜¯å¦ç»“æŸ
-	if ( _seq > _script.length-1 || !_goNext)
-	{			
-            return null;
-	}
-	//bgmæ’­æ”¾
-        if (typeof _script[_seq]['audio'] != 'undefined')
-        {    
-            if (typeof _script[_seq]['audio']['stop'] != 'undefined')
-            {
-                $.each(_script[_seq]['audio']['stop'], function (k,v){
-                    _auCache[v].pause(); 
+    var _dialog = function() {
+            //ÅĞ¶Ï¾ç±¾ÊÇ·ñ½áÊø
+            if (_seq > _script.length - 1 || !_goNext) {
+                return null;
+            }
+            $('#ui').css('background', 'none');
+            //bgm²¥·Å
+            if (typeof _script[_seq]['audio'] != 'undefined') {
+                if (typeof _script[_seq]['audio']['stop'] != 'undefined') {
+                    $.each(_script[_seq]['audio']['stop'], function(k, v) {
+                        _auCache[v].pause();
+                    });
+                }
+                if (typeof _script[_seq]['audio']['play'] != 'undefined') {
+                    $.each(_script[_seq]['audio']['play'], function(k, v) {
+                        _auCache[v].play();
+                    });
+                }
+            }
+            //ĞÂÁ¢»æ´¦Àí
+            if (typeof _script[_seq]['C_Cg'] != 'undefined') {
+                $.each(_cgCache, function(k, v) {
+                    if (v.src.indexOf(_script[_seq]['C_Cg']) != -1) {
+                        $('#cha' + _script[_seq]['C_Place'] + 'cg').attr('src', v.src);
+                    }
                 });
             }
-            if (typeof _script[_seq]['audio']['play'] != 'undefined')
-            {    
-                $.each(_script[_seq]['audio']['play'], function (k,v){
-                    _auCache[v].play();
+            //ÏÔÊ¾ĞÂÁ¢»æ
+            if (typeof _script[_seq]['C_Place'] != 'undefined') {
+                $('#cha' + _script[_seq]['C_Place']).fadeTo('normal', 1);
+                $('.cha:not(#cha' + _script[_seq]['C_Place'] + ')').fadeTo('fast', 0.5);
+            }
+            //µ÷ÓÃÎÄ±¾ÌØĞ§º¯Êı
+            _dialogRun();
+        };
+
+    /**
+     * ÎÄ±¾´¦Àí&ÌØĞ§µ÷ÓÃ&Ñ¡Ïî´¦Àí
+     *
+     * @access private
+     */
+    var _dialogRun = function() {
+            if (typeof _script[_seq]['options'] !== 'undefined') {
+                $(_obj).prepend('<div id="options" style="display:none"></div>');
+                var _cx = parseInt(_width) / 2 - 150;
+                var _cy = parseInt(_height) / 2 - 100;
+                $('#options').css({
+                    'width': '300px',
+                    'height': '200px',
+                    'top': _cy + 'px',
+                    'left': _cx + 'px',
+                    'position': 'absolute',
+                    'z-index': '99',
+                    'background': 'rgba(255,255,255,0.8)',
+                    'border-radius': '15px',
+                    'outline': '5px double black'
                 });
-            }
-        }   
-	//æ–°ç«‹ç»˜å¤„ç†
-	if (typeof _script[_seq]['C_Cg'] != 'undefined')
-	{
-            $('#textarea').fadeTo('normal',0);
-            $.each(_cgCache, function (k, v) {
-                if (v.src.indexOf(_script[_seq]['C_Cg']) != -1)
-                {
-                    $('#cha'+_script[_seq]['C_Place']+'cg').attr('src' ,v.src);
-                }	
-            });
-	}
-	//æ˜¾ç¤ºæ–°ç«‹ç»˜
-	if (typeof _script[_seq]['C_Place'] != 'undefined')
-	{
-            $('#cha'+_script[_seq]['C_Place']).fadeTo('normal', 1);
-            $('.cha:not(#cha'+_script[_seq]['C_Place']+')').fadeTo('fast', 0.5);
-	}
-	//è°ƒç”¨æ–‡æœ¬ç‰¹æ•ˆå‡½æ•°
-	if (typeof _script[_seq]['C_Cg'] != 'undefined')
-	{
-            $('#textarea').fadeTo('normal',1,_dialogRun);
-	}
-	else 
-            {
-                _dialogRun();
-            }
-	};    
-    
-        /**
-         * æ–‡æœ¬å¤„ç†&ç‰¹æ•ˆè°ƒç”¨&é€‰é¡¹å¤„ç†
-	 * 
-	 * @access private
-	 */
-	var _dialogRun = function ()
-	{
-            if (typeof _script[_seq]['options'] !== 'undefined')
-	    {
-		$(_obj).prepend('<div id="options" style="display:none"></div>');
-		var _cx = parseInt(_width) / 2 - 150;
-		var _cy = parseInt(_height) / 2 - 100; 
-		$('#options').css({
-			'width' : '300px',
-			'height' : '200px',
-			'top' : _cy + 'px',
-			'left' : _cx + 'px',
-			'position' : 'absolute',
-			'z-index' : '99',
-			'background' : 'rgba(255,255,255,0.8)',
-			'border-radius' : '15px',
-			'outline' : '5px double black'
-		});
-		var _html = '<table style="margin:10px;width:93%"><tr><td width="100%">'+_script[_seq]['main']+'</td></tr>';
-		$.each(_script[_seq]['options'],function(k,v){
-			_html = _html + '<tr><td><p class="option"><a href="'+v+'">'+k+'</a></p></td></tr>';
-		});
-		_html = _html + '</table>';
-		$('#options').html(_html);
-		$('.option').css({
-			'height' : '20px',
-			'line-height' : '20px',
-			'text-align' : 'center',
-			'background' : '#0072c6',
-			'padding' : '10px 0px',
-			'word-break' : 'break-all'
-		});
-		$('.option a').css({
-			'text-decoration' : 'none',
-			'color' : 'white'
-		});
-		$('#options').fadeIn();
-		return;
+                var _html = '<table style="margin:10px;width:93%"><tr><td width="100%">' + _script[_seq]['main'] + '</td></tr>';
+                $.each(_script[_seq]['options'], function(k, v) {
+                    _html = _html + '<tr><td><p class="option"><a href="' + v + '">' + k + '</a></p></td></tr>';
+                });
+                _html = _html + '</table>';
+                $('#options').html(_html);
+                $('.option').css({
+                    'height': '20px',
+                    'line-height': '20px',
+                    'text-align': 'center',
+                    'background': '#0072c6',
+                    'padding': '10px 0px',
+                    'word-break': 'break-all'
+                });
+                $('.option a').css({
+                    'text-decoration': 'none',
+                    'color': 'white'
+                });
+                $('#options').fadeIn();
+                return;
             }
             $('#textarea').html('<p id="now" class="text"></p>');
-            if (_script[_seq]['blackwork'] == 'true')
-            {
-		$('.text').css('color','#444');
-		$('#now').css('color','#000');
-            }
-            else
-		{
-                    $('.text').css('color','#aaa');	
-                    $('#now').css('color','#fff');				
-		}										
+            $('#now').css({
+                'font-family': 'arial',
+                'font-size': 'medium',
+                'line-height': '25px',
+                'font-weight': 'normal',
+                'word-break': 'break-all',
+                'letter-spacing': '2px'
+            });
+            $('.text').css({
+                'color': 'white',
+                'margin': '10px'
+            });
             _push.setLetter(_script[_seq]['main']);
             _push.toArea();
-            if(typeof _script[_seq]['C_Event'] != 'undefined') 
-            {
-		_effectDispatcher(_script[_seq]['C_Event']);						
-            }													
-	};
-		
-		
-	/**
-         * ç‰¹æ•ˆæŒ‡æ´¾å™¨
-	 *
-	 * @param array C_Event keyä¸ºç‰¹æ•ˆå valueä¸ºç‰¹æ•ˆå‚æ•°
-	 */
-	var _effectDispatcher = function (C_Event)
-	{
-            $.each(C_Event,function (effectName,effectParam){
-		effectName = effectName.split('#');
-		effectName = effectName[0];
-		switch (effectName)
-		{
-                    case 'line':
-			_line(effectParam);
+            if (typeof _script[_seq]['C_Event'] != 'undefined') {
+                _effectDispatcher(_script[_seq]['C_Event']);
+            }
+        };
+
+
+    /**
+     * ÌØĞ§Ö¸ÅÉÆ÷
+     *
+     * @param array C_Event keyÎªÌØĞ§Ãû valueÎªÌØĞ§²ÎÊı
+     * @access private
+     */
+    var _effectDispatcher = function(C_Event) {
+            $.each(C_Event, function(effectName, effectParam) {
+                effectName = effectName.split('#');
+                effectName = effectName[0];
+                switch (effectName) {
+                case 'line':
+                    _line(effectParam);
                     break;
-                    case 'shake':
-			_shake(effectParam);
+                case 'shake':
+                    _shake(effectParam);
                     break;
-                    case 'show':
-			_show(effectParam);
+                case 'show':
+                    _show(effectParam);
                     break;
-                    case 'hide':
-                        _hide(effectParam);
+                case 'hide':
+                    _hide(effectParam);
                     break;
-                    case 'flash':
-			_flash();
+                case 'flash':
+                    _flash();
                     break;
-                    case 'scale':
-			_scale(effectParam);
+                case 'scale':
+                    _scale(effectParam);
                     break;
-                    case 'restore':
-			_restore(effectParam);
+                case 'restore':
+                    _restore(effectParam);
                     break;
-                    case 'work':
-			_work.setArgs(effectParam);
+                case 'work':
+                    _work.setArgs(effectParam);
                     break;
-                    case 'movework':
-			_moveWork(effectParam);
+                case 'movework':
+                    _moveWork(effectParam);
                     break;
-                    case 'openeye':
-                        _openEye();
-                    break;    
-		}
-            });			
-	};
-		
-	var _openEye = function ()
-        {
+                case 'openeye':
+                    _openEye();
+                    break;
+                case 'cghide':
+                    _cgHide(effectParam);
+                    break;
+                case 'itemshow':
+                    _itemShow(effectParam);
+                    break;
+                case 'blur':
+                    _blur(effectParam);
+                }
+            });
+        };
+
+    /**
+     * Í¼Æ¬Ä£ºıÏÔÊ¾
+     *
+     * @param array Args ²ÎÊıÊı×é target:ËØ²Ä×ÊÔ´ºÅ rtime:µ­ÈëÊ±¼ä(Ä¬ÈÏÎª1Ãë) type:ËØ²ÄÀàĞÍ
+     * @access private
+     */
+    var _blur = function(Args) {
+            if (typeof Args['type'] == 'undefined' || typeof Args['target'] == 'undefined') {
+                return;
+            } else {
+                if (Args['type'] != 'item' && Args['type'] != 'bg') {
+                    return;
+                }
+                var _target = null;
+                if (Args['type'] == 'item') {
+                    _target = _itemsCache[Args['target']];
+                }
+                if (Args['type'] == 'bg') {
+                    _target = _bgCache[Args['target']];
+                }
+            }
+            var _rtime = 1000;
+            if (typeof Args['rtime'] != 'undefined') {
+                _rtime = parseInt(Args['rtime']);
+            }
+            var _backObj = document.createElement('canvas');
+            var _backCav = _backObj.getContext('2d');
+            var _frontObj = document.getElementById('cav_bg');
+            var _frontCav = _frontObj.getContext('2d');
+            var _imageData, _pxLength;
+            _backObj.width = _target.width;
+            _backObj.height = _target.height;
+            _backCav.drawImage(_target, 0, 0);
+            _imageData = _backCav.getImageData(0, 0, _target.width, _target.height);
+            _pxLength = _imageData.data.length;
+            for (var _i = 0; _i < _pxLength; _i += 4) {
+                var pw, ph;
+                if (_i <= _imageData.width * 4) {
+                    pw = _i / 4;
+                    ph = 1;
+                } else {
+                    pw = (_i % (_imageData.width * 4)) / 4;
+                    ph = Math.ceil(_i / (_imageData.width * 4));
+                }
+                if (pw % 2 == 0 && ph % 2 == 0) {
+                    _frontCav.beginPath();
+                    _frontCav.fillStyle = 'rgba(' + _imageData.data[_i] + ',' + _imageData.data[_i + 1] + ',' + _imageData.data[_i + 2] + ',0.1)';
+                    _frontCav.fillRect(pw - 3, ph - 3, 8, 8);
+                    _frontCav.closePath();
+                }
+            }
+            $(_frontObj).fadeTo(_rtime, 1);
+        };
+    /**
+     * ËØ²ÄÕ¹Ê¾
+     * ÔÚsp_bg²ã¾ÓÖĞÕ¹Ê¾ËØ²Ä
+     *
+     * @param array Args ²ÎÊıÊı×é targetÎªËØ²Ä×ÊÔ´ºÅ
+     * @access private
+     */
+    var _itemShow = function(Args) {
+            var _target = Args['target'];
+            var _w = _itemsCache[_target].width;
+            var _h = _itemsCache[_target].height;
+            var _x = (parseInt(_width) - _w) / 2;
+            var _y = (parseInt(_height) - _h) / 2;
+            $(_itemsCache[_target]).css({
+                'position': 'relative',
+                'top': _y + 'px',
+                'left': _x + 'px',
+                'opacity': '0'
+            });
+            $('#sp_bg').html(_itemsCache[_target]);
+            $('#sp_bg').css('background', 'rgba(0,0,0,0.3)');
+            $('#sp_bg').fadeTo(0, 1);
+            $(_itemsCache[_target]).fadeTo(500, 1);
+        };
+
+    /**
+     * cgÒş²Ø&»Ö¸´ÏÔÊ¾
+     *
+     * @param Args array ĞèÒªÒş²ØµÄcgÎ»ÖÃºÅ
+     * @access private
+     */
+    var _cgHide = function(Args) {
+            $.each(Args, function(v, k) {
+                if ($('#cha' + k + 'cg').css('opacity') == '0') {
+                    $('#cha' + k + 'cg').fadeTo(500, 1);
+                } else {
+                    $('#cha' + k + 'cg').fadeTo(500, 0);
+                }
+            });
+        };
+
+    /**
+     * Õõ¿ªÑÛÌØĞ§
+     *
+     * @access private
+     */
+    var _openEye = function() {
             $('#sp_bg').html('<div id="eyeup" class="eye"></div><div id="eyedown" class="eye"></div>');
-            $('#sp_bg').css('background','rgba(0,0,0,0.5)');
+            $('#sp_bg').css('background', 'rgba(0,0,0,0.5)');
             $('.eye').css({
-                'width' : parseInt(_width) + 'px',
-                'height' : (parseInt(_height) / 2) + 'px',
-                'background' : '#000',
-                'position' : 'absolute',         
+                'width': parseInt(_width) + 'px',
+                'height': (parseInt(_height) / 2) + 'px',
+                'background': '#000',
+                'position': 'absolute'
             });
             $('#eyeup').css({
-                'top' : '0px',
-                'left' : '0px',
-                'box-shadow' : '0px 5px 11px #000'
+                'top': '0px',
+                'left': '0px',
+                'box-shadow': '0px 5px 11px #000'
             });
             $('#eyedown').css({
-                'bottom' : '0px',
-                'left' : '0px',
-                'box-shadow' : '0px -5px 11px #000'
+                'bottom': '0px',
+                'left': '0px',
+                'box-shadow': '0px -5px 11px #000'
             });
             _goNext = false;
-            $('#sp_bg').fadeTo(0,1);
-            $('.eye').animate({'height' : (parseInt(_height) / 2 * 0.8) + 'px'},1000).delay(200);
-            $('.eye').animate({'height' : (parseInt(_height) / 2) + 'px'},1000,function(){
-                $('#sp_bg').css('background','rgba(0,0,0,0)').delay(200);
+            $('#sp_bg').fadeTo(0, 1);
+            $('.eye').animate({
+                'height': (parseInt(_height) / 2 * 0.8) + 'px'
+            }, 1000).delay(200);
+            $('.eye').animate({
+                'height': (parseInt(_height) / 2) + 'px'
+            }, 1000, function() {
+                $('#sp_bg').css('background', 'rgba(0,0,0,0)').delay(200);
             });
-            $('.eye').animate({'height' : '0px','opacity': '0.5'},2500,function (){
+            $('.eye').animate({
+                'height': '0px',
+                'opacity': '0.5'
+            }, 2500, function() {
                 _goNext = true;
             });
         };
-	
-	/**
-	 * é»‘åº•ç™½å­—æ·¡å…¥æ·¡å‡ºæ•ˆæœ
-	 * 
-	 * @param array Args text:æ–‡å­—, out:æ˜¾ç¤ºç»“æŸåæ˜¯å¦æ·¡å‡ºsp_bgå±‚ï¼Œé»˜è®¤ä¸ºæ˜¯
-	 */
-	var _moveWork = function (Args)
-	{
-            $('#sp_bg').html('<span id="movework" style="font-size:20px">'+Args['text']+'</span>');
+
+    /**
+     * ºÚµ×°××Öµ­Èëµ­³öĞ§¹û
+     *
+     * @param array Args text:ÎÄ×Ö, out:ÏÔÊ¾½áÊøºóÊÇ·ñµ­³ösp_bg²ã£¬Ä¬ÈÏÎªÊÇ
+     * @access private
+     */
+    var _moveWork = function(Args) {
+            $('#sp_bg').html('<span id="movework" style="font-size:20px">' + Args['text'] + '</span>');
             var _cl = parseInt(_width) / 2;
             var _ct = parseInt(_height) / 2;
             var _hw = $('#movework').width() / 2;
-            var _hh = $('#movework').height() / 2;				
+            var _hh = $('#movework').height() / 2;
             $('#movework').css({
-		'break-work' : 'break-all',
-		'position': 'relative',
-		'top' : _ct - _hh +'px',
-		'left' : _cl - _hw + 'px',
-		'color' : '#fff',
-		'text-align' : 'center',
-		'opacity' : '0'
+                'break-work': 'break-all',
+                'position': 'relative',
+                'top': _ct - _hh + 'px',
+                'left': _cl - _hw + 'px',
+                'color': '#fff',
+                'text-align': 'center',
+                'opacity': '0'
             });
-            if (typeof Args['bg'] != 'undefined')
-            {
-		$('#sp_bg').css('background',Args['bg']);
+            if (typeof Args['bg'] != 'undefined') {
+                $('#sp_bg').css('background', Args['bg']);
+            } else {
+                $('#sp_bg').css('background', '#000');
             }
-            else
-		{
-                    $('#sp_bg').css('background','#000');
-		}				
-            $('#sp_bg').fadeTo(0,1);
+            $('#sp_bg').fadeTo(0, 1);
             _goNext = false;
-            $('#movework').animate(
-                {
-                    'opacity' : '1'
-                },
-                1000,
-		function ()
-		{
-                    $(this).fadeTo(1000,0,function (){
-                        $('#sp_bg').html('');
-                        if (typeof Args['out'] == 'undefined' || Args['out'] != 'false')
-                        {
-                            $('#sp_bg').fadeTo(500,0,function(){
-                                _goNext = true;
-                            });
-                        }
-                        else
-                            {
-                                _goNext = true;
-                            }									
-                    }).delay(100);
-		}
-            );
-	};
-		
-	/**
-	 * æ–‡å­—ç¾¤ç‰¹æ•ˆ
-	 * 
-	 * @access private
-	 */
-	var _work = (function ()
-	{
-            var __text = new Array();
-            var __bg = null;
-            var __obj = null;
-            var __cav = null;
-            var __z = new Array();
-            var __t = null;
-            var __c = 0;
-            var __init = function ()
-            {
-		__obj = document.getElementById('cav_bg');
-		__cav = __obj.getContext('2d');
-		__cav.clearRect(0, 0, parseInt(_width), parseInt(_height));
-		if (__bg == 'white')
-		{
+            $('#movework').animate({
+                'opacity': '1'
+            }, 1000, function() {
+                $(this).fadeTo(1000, 0, function() {
+                    $('#sp_bg').html('');
+                    if (typeof Args['out'] == 'undefined' || Args['out'] != 'false') {
+                        $('#sp_bg').fadeTo(500, 0, function() {
+                            _goNext = true;
+                        });
+                    } else {
+                        _goNext = true;
+                    }
+                }).delay(100);
+            });
+        };
+
+    /**
+     * ÎÄ×ÖÈºÌØĞ§
+     * textÎªÎÄ×ÖÈº bgÎªÆğÊ¼±³¾°É« animateÎªÊÇ·ñÎª¶¯»­ĞÎÊ½
+     *
+     * @access private
+     */
+    var _work = (function() {
+        var __text = new Array();
+        var __bg = null;
+        var __obj = null;
+        var __cav = null;
+        var __z = new Array();
+        var __t = null;
+        var __c = 0;
+        var __init = function() {
+                __obj = document.getElementById('cav_bg');
+                __cav = __obj.getContext('2d');
+                __cav.clearRect(0, 0, parseInt(_width), parseInt(_height));
+                if (__bg == 'white') {
                     __cav.fillStyle = '#eee';
-		}
-		else 
-                    {
-			__cav.fillStyle = '#333';
-                    }
-		__cav.fillRect(0, 0, _width, _height);
-		if (__bg == 'white')
-		{
+                } else {
                     __cav.fillStyle = '#333';
-		}
-		else 
-                    {
-			__cav.fillStyle = '#eee';
-                    }
-		for (var _i = 0; _i < __text.length; _i++)
-		{
+                }
+                __cav.fillRect(0, 0, _width, _height);
+                if (__bg == 'white') {
+                    __cav.fillStyle = '#333';
+                } else {
+                    __cav.fillStyle = '#eee';
+                }
+                for (var _i = 0; _i < __text.length; _i++) {
                     __z[_i] = parseInt(Math.random() * __text.length);
-		}
-		if (typeof __text[__z[0]] != 'undefined')
-		{
-                    __cav.font = "70px é›…é»‘";
+                }
+                if (typeof __text[__z[0]] != 'undefined') {
+                    __cav.font = "70px ÑÅºÚ";
                     __cav.fillText(__text[__z[0]], 300, 100);
-		}
-		if (typeof __text[__z[1]] != 'undefined')
-		{
-                    __cav.font = "30px é›…é»‘";
+                }
+                if (typeof __text[__z[1]] != 'undefined') {
+                    __cav.font = "30px ÑÅºÚ";
                     __cav.fillText(__text[__z[1]], 200, 300);
-		}
-		if (typeof __text[__z[2]] != 'undefined')
-		{
-                    __cav.font = "40px é›…é»‘";
+                }
+                if (typeof __text[__z[2]] != 'undefined') {
+                    __cav.font = "40px ÑÅºÚ";
                     __cav.fillText(__text[__z[2]], 50, 350);
-		}
-		if (typeof __text[__z[3]] != 'undefined')
-		{
-                    __cav.font = '55px é›…é»‘';
+                }
+                if (typeof __text[__z[3]] != 'undefined') {
+                    __cav.font = '55px ÑÅºÚ';
                     __cav.fillText(__text[__z[3]], 350, 450);
-		}
-		if (typeof __text[__z[4]] != 'undefined')
-		{
-                    __cav.font = '50px é›…é»‘';
+                }
+                if (typeof __text[__z[4]] != 'undefined') {
+                    __cav.font = '50px ÑÅºÚ';
                     __cav.fillText(__text[__z[4]], 200, 200);
-		}
-		if (typeof __text[__z[5]] != 'undefined')
-		{
-                    __cav.font = '40px é›…é»‘';
+                }
+                if (typeof __text[__z[5]] != 'undefined') {
+                    __cav.font = '40px ÑÅºÚ';
                     __cav.fillText(__text[__z[5]], 450, 350);
-		}
-		if (typeof __text[__z[6]] != 'undefined')
-		{
-                    __cav.font = '60px é›…é»‘';
+                }
+                if (typeof __text[__z[6]] != 'undefined') {
+                    __cav.font = '60px ÑÅºÚ';
                     __cav.fillText(__text[__z[6]], 100, 550);
-		}
-		if (typeof __text[__z[7]] != 'undefined')
-		{
-                    __cav.font = '40px é›…é»‘';
+                }
+                if (typeof __text[__z[7]] != 'undefined') {
+                    __cav.font = '40px ÑÅºÚ';
                     __cav.fillText(__text[__z[7]], 100, 130);
-		}
-		if (typeof __text[__z[8]] != 'undefined')
-		{
-                    __cav.font = '70px é›…é»‘';
-                    __cav.fillText(__text[__z[8]], 10, 700);	
-		}
+                }
+                if (typeof __text[__z[8]] != 'undefined') {
+                    __cav.font = '70px ÑÅºÚ';
+                    __cav.fillText(__text[__z[8]], 10, 700);
+                }
             };
-            var __animate = function()
-            {
-		_goNext = false;
-                if (__c % 10 == 0)
-		{
-                    if (__bg == 'white')
-                    {
+        var __animate = function() {
+                _goNext = false;
+                if (__c % 10 == 0) {
+                    if (__bg == 'white') {
                         __bg = 'black';
-                    }
-                    else
-                    {
-			__bg = 'white';
+                    } else {
+                        __bg = 'white';
                     }
                     __init();
-		}
-		__c++;
-		if ( __c >= 250)
-		{
+                }
+                __c++;
+                if (__c >= 250) {
                     _goNext = true;
                     return;
-		}
-		else
-                    {
-			setTimeout (__animate,1);
-                    }						
+                } else {
+                    setTimeout(__animate, 1);
+                }
             };
-            var __callback = 
-            {
-		setArgs : function (Args)
-		{
-                    __text = Args['text'];
-                    if (typeof Args['bg'] != 'undefined')
-                    {
-			__bg = Args['bg'];
+        var __callback = {
+            setArgs: function(Args) {
+                __text = Args['text'];
+                if (typeof Args['bg'] != 'undefined') {
+                    __bg = Args['bg'];
+                } else {
+                    __bg = 'black';
+                }
+                __init();
+                $(__obj).fadeTo(1000, 1, function() {
+                    if (typeof Args['animate'] != 'undefined') {
+                        __animate();
                     }
-                    else 
-			{
-                            __bg = 'black';
-			}								
-                    __init();
-                    $(__obj).fadeTo(1000,1,function (){
-                        if (typeof Args['animate'] != 'undefined')
-			{
-                            __animate();
-			}                            
-                    });
-		}
-            };
-            return __callback; 
-	})();
-		
-	/**
-	 * è¿˜åŸèƒŒæ™¯å›¾æˆåŸæ¥å¤§å°
-	 *
-	 * @param int Args ç›®æ ‡èƒŒæ™¯å±‚å·
-	 * @access private
-	 */
-	var _restore = function (Args)
-	{
-            var _cssList=[];
+                });
+            }
+        };
+        return __callback;
+    })();
+
+    /**
+     * »¹Ô­±³¾°Í¼³ÉÔ­À´´óĞ¡
+     *
+     * @param int Args Ä¿±ê±³¾°²ãºÅ
+     * @access private
+     */
+    var _restore = function(Args) {
+            var _cssList = [];
             var _goNext = false;
-            if (typeof _bg[Args]['moveStart'] != 'undefined')
-            {
-		var _startPlace = _bg[Args]['moveStart'].split(" ");
-		_cssList['top'] = parseInt(_y) + parseInt(_startPlace[1]);
-		_cssList['left'] = parseInt(_x) + parseInt(_startPlace[0]);
+            if (typeof _bg[Args]['moveStart'] != 'undefined') {
+                var _startPlace = _bg[Args]['moveStart'].split(" ");
+                _cssList['top'] = parseInt(_y) + parseInt(_startPlace[1]);
+                _cssList['left'] = parseInt(_x) + parseInt(_startPlace[0]);
+            } else {
+                _cssList['top'] = parseInt(_y);
+                _cssList['left'] = parseInt(_x);
             }
-            else 
-            {
-		_cssList['top'] = parseInt(_y);
-		_cssList['left'] = parseInt(_x);
+            if (typeof _bg[Args]['width'] != 'undefined') {
+                _cssList['width'] = _bg[Args]['width'];
+            } else {
+                _cssList['width'] = _bgCache[Args].naturalWidth;
             }
-            if (typeof _bg[Args]['width'] != 'undefined')
-            {
-        	_cssList['width'] = _bg[Args]['width'];
+            if (typeof _bg[Args]['height'] != 'undefined') {
+                _cssList['height'] = _bg[Args]['height'];
+            } else {
+                _cssList['height'] = _bgCache[Args].naturalHeight;
             }
-            else
-                {
-                    _cssList['width'] = _bgCache[Args].naturalWidth;
-                }
-            if (typeof _bg[Args]['height'] != 'undefined')
-            {
-        	_cssList['height'] = _bg[Args]['height'];
+            if (typeof Args['opacity'] != 'undefined') {
+                _cssList['opacity'] = Args['opacity'];
             }
-            else
-                {
-                    _cssList['height'] = _bgCache[Args].naturalHeight;
-                }
-            if (typeof Args['opacity'] != 'undefined')
-            {
-		_cssList['opacity'] = Args['opacity'];
-            }        
-            $('#bglayout_' + Args).animate(_cssList,'fast',function(){
-		_goNext = true;
+            $('#bglayout_' + Args).animate(_cssList, 'fast', function() {
+                _goNext = true;
             });
-	};
-		
-	/**
-	 * canvaså›¾æ¡ˆç‰¹æ•ˆ
-	 *
-	 * @param array Args å‚æ•°:   type: grid=>ç½‘æ ¼,radar=>é›·è¾¾ï¼Œspiral=>èºæ—‹çº¿   color: çº¿æ¡é¢œè‰²   bgcolor:èƒŒæ™¯è‰²
-	 * @access private
-	 */
-	var _line = function (Args)
-	{
+        };
+
+    /**
+     * canvasÍ¼°¸ÌØĞ§
+     *
+     * @param array Args ²ÎÊı:   type: grid=>Íø¸ñ,radar=>À×´ï£¬spiral=>ÂİĞıÏß   color: ÏßÌõÑÕÉ«   bgcolor:±³¾°É«
+     * @access private
+     */
+    var _line = function(Args) {
             var obj = document.getElementById('cav_bg');
             var cav = obj.getContext('2d');
             cav.clearRect(0, 0, parseInt(_width), parseInt(_height));
-            $(obj).css('opacity',0);
-            cav.strokeStyle='#000';
-            if (typeof Args['color'] != 'undefined')
-            {
-		cav.strokeStyle=Args['color'];
+            $(obj).css('opacity', 0);
+            cav.strokeStyle = '#000';
+            if (typeof Args['color'] != 'undefined') {
+                cav.strokeStyle = Args['color'];
             }
-            if (typeof Args['bgcolor'] != 'undefined')
-            {
-		cav.fillStyle=Args['bgcolor'];
-		cav.fillRect(0, 0, _width, _height);
+            if (typeof Args['bgcolor'] != 'undefined') {
+                cav.fillStyle = Args['bgcolor'];
+                cav.fillRect(0, 0, _width, _height);
             }
-            switch (Args['type'])
-            {
-		case 'grid':
-                    var _space = 20;
-                    var _wTime = Math.ceil(parseInt(_width) / _space);
-                    var _hTime = Math.ceil(parseInt(_height) / _space);
-                    for (var _i =1; _i <= _wTime; _i++)
-                    {
-                        cav.moveTo(_i * _space,0);
-                        cav.lineTo(_i * _space, _height);
-                        cav.stroke();							
-                    }
-                    for (_i = 1; _i <= _hTime; _i++)
-                    {
-                        cav.moveTo(0,_i * _space);
-                        cav.lineTo(_width, _i * _space);
-                        cav.stroke();									
-                    }		
-		break;
-		case 'radar':
-                    var _r = 50;
-                    if (typeof Args['radius'] != 'undefined')
-                    {
-                        _r = Args['radius'];
-                    }
-                    var _n = 4;
-                    if (typeof Args['times'] != 'undefined')
-                    {
-			_n = Args['times'];
-                    }
-                    var _hWidth=parseInt(_width) / 2;
-                    var _hHeight=parseInt(_height) / 2;
-                    cav.moveTo(0, _hHeight);
-                    cav.lineTo(_width, _hHeight);
+            switch (Args['type']) {
+            case 'grid':
+                var _space = 20;
+                var _wTime = Math.ceil(parseInt(_width) / _space);
+                var _hTime = Math.ceil(parseInt(_height) / _space);
+                for (var _i = 1; _i <= _wTime; _i++) {
+                    cav.moveTo(_i * _space, 0);
+                    cav.lineTo(_i * _space, _height);
                     cav.stroke();
-                    cav.moveTo(_hWidth, 0);
-                    cav.lineTo(_hWidth, _height);
-                    cav.stroke();
-                    cav.moveTo(0, 0);
-                    cav.lineTo(_width ,_height);
-                    cav.stroke();
-                    cav.moveTo(_width, 0);
-                    cav.lineTo(0 ,_height);
-                    cav.stroke();
-                    for (var _i = 1; _i <= _n; _i++)
-                    {
-			cav.moveTo(_hWidth - (_r * _i), _hHeight);
-			cav.arc(_hWidth, _hHeight, _r * _i, 0, Math.PI*2, false);
-			cav.stroke();
-                    }																									
-		break;
-		case 'spiral':
-                    var _hWidth=parseInt(_width) / 2;
-                    var _hHeight=parseInt(_height) / 2;
-                    var _r = 50;
-                    if (typeof Args['radius'] != 'undefined')
-                    {
-			_r = Args['radius'];
-                    }
-                    var _i = true;
-                    var _w = _hWidth;
-                    var _t = 1;
-                    while(_r < _hHeight && _r < _hWidth)
-                    {
-                        cav.moveTo(_w + _r, _hHeight);
-			cav.arc(_w, _hHeight, _r, 0, Math.PI, _i);
-			if (_i)
-			{
-                            _i = false;
-                            _w = -0.1 * _r + _w;
-			}
-                        else
-                            {
-				_i = true;
-				_w = 0.1 * _r + _w;
-                            }
-			_r = _r * 1.1;
-			_t++;
-                    }
-                    cav.stroke();																						
-                break;	
-            }
-            $(obj).fadeTo(1000,1);
-	};
-		
-	/**
-         * é—ªç”µæ•ˆæœ
-	 * 
-	 * @access private
-	 */
-	var _flash = function ()
-	{
-            $('#sp_bg').fadeTo(50,0.5);
-            $('#sp_bg').fadeTo(50,0);
-            $('#sp_bg').fadeTo(100,0.5);
-            $('#sp_bg').fadeTo(100,0).delay(500);
-            $('#sp_bg').fadeTo(100,0.7);
-            $('#sp_bg').fadeTo(1000,0);				
-	};
-		
-	/**
-	 * ç¼©æ”¾ç‰¹æ•ˆ
-	 *
-	 * @param array Args å‚æ•°: target:ç›®æ ‡èƒŒæ™¯å±‚,scale:ç¼©æ”¾æ¯”ä¾‹,position:ç„¦ç‚¹åæ ‡
-	 * @access private
-	 */
-	var _scale = function (Args)
-	{
-            var _actionList=[];
-            var _rtime=500;
-            var _target=Args['target'];
-            if (typeof Args['scale'] != 'undefined')
-            {
-		_actionList['width'] = $('#bglayout_' + _target).width() * Args['scale'];
-		_actionList['height'] = $('#bglayout_' + _target).height() * Args['scale'];
-            }
-            else
-                {
-                    if (typeof Args['width'] != 'undefined' && typeof Args['height'] != 'undefined')
-                    {
-                        _actionList['width'] = Args['width'] + 'px';
-                        _actionList['height'] = Args['height'] + 'px';
-                    }
                 }
-            if (typeof Args['position'] != 'undefined')
-            {
-		var Position = Args['position'].split(" ");
-                _actionList['top'] = parseInt($('#bglayout_' + _target).css('top'))	- parseInt(Position[1]) + 'px';
-		_actionList['left'] = parseInt($('#bglayout_' + _target).css('left'))	- parseInt(Position[0]) + 'px';		
+                for (_i = 1; _i <= _hTime; _i++) {
+                    cav.moveTo(0, _i * _space);
+                    cav.lineTo(_width, _i * _space);
+                    cav.stroke();
+                }
+                break;
+            case 'radar':
+                var _r = 50;
+                if (typeof Args['radius'] != 'undefined') {
+                    _r = Args['radius'];
+                }
+                var _n = 4;
+                if (typeof Args['times'] != 'undefined') {
+                    _n = Args['times'];
+                }
+                var _hWidth = parseInt(_width) / 2;
+                var _hHeight = parseInt(_height) / 2;
+                cav.moveTo(0, _hHeight);
+                cav.lineTo(_width, _hHeight);
+                cav.stroke();
+                cav.moveTo(_hWidth, 0);
+                cav.lineTo(_hWidth, _height);
+                cav.stroke();
+                cav.moveTo(0, 0);
+                cav.lineTo(_width, _height);
+                cav.stroke();
+                cav.moveTo(_width, 0);
+                cav.lineTo(0, _height);
+                cav.stroke();
+                for (var _i = 1; _i <= _n; _i++) {
+                    cav.moveTo(_hWidth - (_r * _i), _hHeight);
+                    cav.arc(_hWidth, _hHeight, _r * _i, 0, Math.PI * 2, false);
+                    cav.stroke();
+                }
+                break;
+            case 'spiral':
+                var _hWidth = parseInt(_width) / 2;
+                var _hHeight = parseInt(_height) / 2;
+                var _r = 50;
+                if (typeof Args['radius'] != 'undefined') {
+                    _r = Args['radius'];
+                }
+                var _i = true;
+                var _w = _hWidth;
+                var _t = 1;
+                while (_r < _hHeight && _r < _hWidth) {
+                    cav.moveTo(_w + _r, _hHeight);
+                    cav.arc(_w, _hHeight, _r, 0, Math.PI, _i);
+                    if (_i) {
+                        _i = false;
+                        _w = -0.1 * _r + _w;
+                    } else {
+                        _i = true;
+                        _w = 0.1 * _r + _w;
+                    }
+                    _r = _r * 1.1;
+                    _t++;
+                }
+                cav.stroke();
+                break;
             }
-            if (typeof Args['opacity'] != 'undefined')
-            {
-		_actionList['opacity'] = Args['opacity'];
-            }
-            if (typeof Args['rtime'] != 'undefined')
-            {
-		_rtime=Args['rtime'];
-            }
-            $('#bglayout_' + _target).animate(_actionList,parseInt(_rtime),'linear');
-	};
-		
-	/**
-	 * èƒŒæ™¯å±‚æ·¡å…¥ç‰¹æ•ˆ
-         * 
-	 * @param array Args å‚æ•° 0ã€target 1ã€opacity 2ã€rtime
-	 * @access private
-	 */
-	var _show = function (Args)
-	{
-            var _o = 1;
-            if (typeof Args[1] != 'undefined')
-            {
-		_o = Args[1];
-            }
-            var _rtime = 2000;
-            if (typeof Args[2] != 'undefined')
-            {
-		_rtime = parseInt(Args[2]);
-            }
-            if (Args[0] == 'canvas')
-            {
-		$('#cav_bg').animate({opacity:_o},{duration:_rtime});
-		return;
-            }			
-            $('#bglayout_' + Args[0]).animate({opacity:_o},{duration:_rtime});
-	};
-		
-	/**
-         * èƒŒæ™¯å±‚æ·¡å‡ºç‰¹æ•ˆ
-	 *
-	 * @param array Args å‚æ•° 0ã€target 1ã€rtime
-	 * @access private
-	 */
-	var _hide = function (Args)
-        {
-            var _rtime = 2000;
-            if (typeof Args[1] != 'undefined')
-            {
-		_rtime = parseInt(Args[1]);
-            }
-            if (Args[0] == 'canvas')
-            {
-		$('#cav_bg').animate({opacity:0},{duration:_rtime});
-		return;
-            }
-            $('#bglayout_' + Args[0]).animate({opacity:0},{duration:_rtime});
+            $(obj).fadeTo(1000, 1);
         };
-		
-	/**
-         * éœ‡åŠ¨ç‰¹æ•ˆ
-         *
-         * @param int Args éœ‡åŠ¨æ¬¡æ•°
-         * @access private
-	 */
-	var _shake = function (Args)
-	{				
-            var args=parseInt(Args);
-            if (isNaN(args) || args == 0)
-            {
-		args = 1;
+
+    /**
+     * ÉÁµçĞ§¹û
+     *
+     * @access private
+     */
+    var _flash = function() {
+            _goNext = false;
+            $('#sp_bg').fadeTo(50, 0.5);
+            $('#sp_bg').fadeTo(50, 0);
+            $('#sp_bg').fadeTo(100, 0.5);
+            $('#sp_bg').fadeTo(100, 0).delay(500);
+            $('#sp_bg').fadeTo(100, 0.7);
+            $('#sp_bg').fadeTo(1000, 0, function() {
+                _goNext = true;
+            });
+        };
+
+    /**
+     * Ëõ·ÅÌØĞ§
+     *
+     * @param array Args ²ÎÊı: target:Ä¿±ê±³¾°²ã,scale:Ëõ·Å±ÈÀı,position:½¹µã×ø±ê,opacity:Í¸Ã÷¶È
+     * @access private
+     */
+    var _scale = function(Args) {
+            var _actionList = [];
+            var _rtime = 500;
+            var _target = Args['target'];
+            if (typeof Args['scale'] != 'undefined') {
+                _actionList['width'] = $('#bglayout_' + _target).width() * Args['scale'];
+                _actionList['height'] = $('#bglayout_' + _target).height() * Args['scale'];
+            } else {
+                if (typeof Args['width'] != 'undefined' && typeof Args['height'] != 'undefined') {
+                    _actionList['width'] = Args['width'] + 'px';
+                    _actionList['height'] = Args['height'] + 'px';
+                }
+            }
+            if (typeof Args['position'] != 'undefined') {
+                var Position = Args['position'].split(" ");
+                _actionList['top'] = parseInt($('#bglayout_' + _target).css('top')) - parseInt(Position[1]) + 'px';
+                _actionList['left'] = parseInt($('#bglayout_' + _target).css('left')) - parseInt(Position[0]) + 'px';
+            }
+            if (typeof Args['opacity'] != 'undefined') {
+                _actionList['opacity'] = Args['opacity'];
+            }
+            if (typeof Args['rtime'] != 'undefined') {
+                _rtime = Args['rtime'];
+            }
+            $('#bglayout_' + _target).animate(_actionList, parseInt(_rtime), 'linear');
+        };
+
+    /**
+     * ±³¾°²ãµ­ÈëÌØĞ§
+     *
+     * @param array Args ²ÎÊı 0¡¢target 1¡¢opacity 2¡¢rtime
+     * @access private
+     */
+    var _show = function(Args) {
+            var _o = 1;
+            if (typeof Args[1] != 'undefined') {
+                _o = Args[1];
+            }
+            var _rtime = 2000;
+            if (typeof Args[2] != 'undefined') {
+                _rtime = parseInt(Args[2]);
+            }
+            if (Args[0] == 'canvas') {
+                $('#cav_bg').animate({
+                    opacity: _o
+                }, {
+                    duration: _rtime
+                });
+                return;
+            }
+            $('#bglayout_' + Args[0]).animate({
+                opacity: _o
+            }, {
+                duration: _rtime
+            });
+        };
+
+    /**
+     * ±³¾°²ãµ­³öÌØĞ§
+     *
+     * @param array Args ²ÎÊı 0¡¢target 1¡¢rtime
+     * @access private
+     */
+    var _hide = function(Args) {
+            var _rtime = 2000;
+            if (typeof Args[1] != 'undefined') {
+                _rtime = parseInt(Args[1]);
+            }
+            if (Args[0] == 'canvas') {
+                $('#cav_bg').animate({
+                    opacity: 0
+                }, {
+                    duration: _rtime
+                });
+                return;
+            }
+            if (Args[0] == 'sp_bg') {
+                $('#sp_bg').animate({
+                    opacity: 0,
+                    background: '#fff'
+                }, {
+                    duration: _rtime
+                });
+                return;
+            }
+            $('#bglayout_' + Args[0]).animate({
+                opacity: 0
+            }, {
+                duration: _rtime
+            });
+        };
+
+    /**
+     * Õğ¶¯ÌØĞ§
+     *
+     * @param int Args Õğ¶¯´ÎÊı
+     * @access private
+     */
+    var _shake = function(Args) {
+            var args = parseInt(Args);
+            if (isNaN(args) || args == 0) {
+                args = 1;
             }
             var shtop = parseInt($(_obj).css('top'));
             var sleft = parseInt($(_obj).css('left'));
             shtop = parseInt(shtop);
             sleft = parseInt(sleft);
             var s = 80;
-            for (var i=1;i<=args;i++)
-            {
-        	$(_obj).animate({top:shtop-10+'px',left:sleft-10+'px'},{duration:s});
-        	$(_obj).animate({top:shtop+10+'px',left:sleft+10+'px'},{duration:s});
-        	$(_obj).animate({top:shtop+10+'px',left:sleft-20+'px'},{duration:s});
-        	$(_obj).animate({top:shtop-10+'px',left:sleft+10+'px'},{duration:s});
-        	$(_obj).animate({top:shtop+'px',left:sleft+'px'},{duration:s}).delay(800);							
+            for (var i = 1; i <= args; i++) {
+                $(_obj).animate({
+                    top: shtop - 10 + 'px',
+                    left: sleft - 10 + 'px'
+                }, {
+                    duration: s
+                });
+                $(_obj).animate({
+                    top: shtop + 10 + 'px',
+                    left: sleft + 10 + 'px'
+                }, {
+                    duration: s
+                });
+                $(_obj).animate({
+                    top: shtop + 10 + 'px',
+                    left: sleft - 20 + 'px'
+                }, {
+                    duration: s
+                });
+                $(_obj).animate({
+                    top: shtop - 10 + 'px',
+                    left: sleft + 10 + 'px'
+                }, {
+                    duration: s
+                });
+                $(_obj).animate({
+                    top: shtop + 'px',
+                    left: sleft + 'px'
+                }, {
+                    duration: s
+                }).delay(800);
             }
-	};
-		
-        /**
-         * ç«‹ç»˜ç¼“å­˜
-         * 
-         * @access private
-         */
-        var _cgCacheFunc = function () {
+        };
+
+    /**
+     * Á¢»æ»º´æ
+     *
+     * @access private
+     */
+    var _cgCacheFunc = function() {
             var cg = [];
-            $.each(_script, function (Key, Value) {
-                if (typeof Value['C_Cg'] != 'undefined' && Value['C_Cg'] != '')
-                {
-                    cg.push = Value['C_Cg'];
+            var i = 0;
+            $.each(_script, function(Key, Value) {
+                if (typeof Value['C_Cg'] != 'undefined' && Value['C_Cg'] != '') {
+                    cg[i] = [];
+                    if (typeof Value['Cg_width'] != 'undefined' && Value['Cg_width'] != '') {
+                        cg[i]['width'] = Value['Cg_width'];
+                    }
+                    if (typeof Value['Cg_height'] != 'undefined' && Value['Cg_height'] != '') {
+                        cg[i]['height'] = Value['Cg_height'];
+                    }
+                    cg[i]['fn'] = Value['C_Cg'];
+                    i++;
                 }
             });
-            $.each(cg, function (k, v) {
+            $.each(cg, function(k, v) {
                 _cgCache[k] = new Image();
-                _cgCache[k].src = v;
+                _cgCache[k].src = v['fn'];
+                if (typeof v['width'] != 'undefined') {
+                    _cgCache[k].width = v['width'];
+                }
+                if (typeof v['height'] != 'undefined') {
+                    _cgCache[k].height = v['height'];
+                }
             });
         };
 
-        /**
-         * èƒŒæ™¯ç¼“å­˜
-         * 
-         * @access private
-         */
-        var _bgCacheFunc = function () 
-        {
-            $.each(_bg, function (k, v) 
-            {
+    /**
+     * ±³¾°»º´æ
+     *
+     * @access private
+     */
+    var _bgCacheFunc = function() {
+            $.each(_bg, function(k, v) {
                 _bgCache[k] = new Image();
                 _bgCache[k].src = v['fn'];
                 _bgCache[k].id = 'bglayout_' + k;
                 _bgCache[k].className = 'bglayout';
                 $(_bgCache[k]).css({
-                    'position' : 'absolute',
-                    'top' : _y + 'px',
-                    'left' : _x + 'px'
+                    'position': 'absolute',
+                    'top': _y + 'px',
+                    'left': _x + 'px'
                 });
-            if (typeof v['width'] != 'undefined')
-            {
-            	$(_bgCache[k]).width(parseInt(v['width']));
-            }
-            if (typeof v['height'] != 'undefined')
-            {
-            	$(_bgCache[k]).height(parseInt(v['height']));
-            }            
+                if (typeof v['width'] != 'undefined') {
+                    $(_bgCache[k]).width(parseInt(v['width']));
+                }
+                if (typeof v['height'] != 'undefined') {
+                    $(_bgCache[k]).height(parseInt(v['height']));
+                }
             });
         };
 
-	/**
-	 * éŸ³é¢‘ç¼“å­˜
-         *
-	 * @access private
-	 */
-        var _auCacheFunc = function ()
-	{
-            $.each(_audio,function(k,v)
-            {
-		_auCache[k] = new Audio(v['fn']);
-		_auCache[k].id = 'audio_'+k;
-                if (v['loop'] == '1')
-                {
+    /**
+     * ÒôÆµ»º´æ
+     *
+     * @access private
+     */
+    var _auCacheFunc = function() {
+            $.each(_audio, function(k, v) {
+                _auCache[k] = new Audio(v['fn']);
+                _auCache[k].id = 'audio_' + k;
+                if (v['loop'] == '1') {
                     _auCache[k].loop = true;
-                }    
-		_auCache[k].control = false;
-		_auComplete[k] = false;
-		_auCache[k].addEventListener('canplaythrough',_auCacheComplete,false);
+                }
+                _auCache[k].control = false;
+                _auComplete[k] = false;
+                _auCache[k].addEventListener('canplaythrough', _auCacheComplete, false);
             });
-	};
-		
-	/**
-         * éŸ³é¢‘ç¼“å­˜å›è°ƒ
-	 *
-	 * @access private
-	 */
-	var _auCacheComplete = function ()
-	{
-            var _e = arguments[0];
-	    var _id = _e.target.id;
-            _id = _id.replace(/audio_/,'');
-            _auComplete[_id] = true;
-	};
+        };
 
-        /**
-         * ç¼“å­˜æ£€æŸ¥
-         * å®Œæˆåå›è°ƒèˆå°æ„ç­‘å‡½æ•°
-         *
-         * @access private
-         * @return boolean ç¼“å­˜æ˜¯å¦å®Œæˆ
-         */
-        var _checkCache = function () 
-        {
+    /**
+     * ÒôÆµ»º´æ»Øµ÷
+     *
+     * @access private
+     */
+    var _auCacheComplete = function() {
+            var _e = arguments[0];
+            var _id = _e.target.id;
+            _id = _id.replace(/audio_/, '');
+            _auComplete[_id] = true;
+        };
+
+    /**
+     * ËØ²Ä»º´æ
+     *
+     * @access private
+     */
+    var _itemsCacheFunc = function() {
+            $.each(_items, function(Key, Val) {
+                _itemsCache[Key] = new Image();
+                _itemsCache[Key].src = Val['fn'];
+                if (typeof Val['width'] != 'undefined') {
+                    _itemsCache[Key].width = Val['width'];
+                }
+                if (typeof Val['height'] != 'undefined') {
+                    _itemsCache[Key].width = Val['height'];
+                }
+            });
+        };
+
+    /**
+     * »º´æ¼ì²é
+     * Íê³Éºó»Øµ÷ÎèÌ¨¹¹Öşº¯Êı
+     *
+     * @access private
+     * @return boolean »º´æÊÇ·ñÍê³É
+     */
+    var _checkCache = function() {
             var a = true;
             var b = true;
             var c = true;
+            var e = true;
             var _bc = 0;
             var _cc = 0;
             var _ac = 0;
-            if (_audio.length != 0)
-            {
-        	$.each(_auComplete,function (k2,v2)
-        	{
-                    if (v2)
-                    {
-        		_ac++;
+            var _ec = 0;
+            if (_audio.length != 0) {
+                $.each(_auComplete, function(k2, v2) {
+                    if (v2) {
+                        _ac++;
+                    } else {
+                        a = false;
                     }
-                    else
-        		{
-                            a = false;	
-        		}
                 });
-                $('#load_status p:eq(3)').html('bgmè½½å…¥:'+_ac+'/'+_auCache.length);    			
+                $('#load_status p:eq(4)').html('bgmÔØÈë:' + _ac + '/' + _auCache.length);
             }
-            if (_bg.length != 0)
-            {
-        	$.each(_bgCache, function (k, v) 
-        	{
-                    if (v.complete == false || typeof v == 'undefined')
-                    { 
-            		b = false; 
+            if (_bg.length != 0) {
+                $.each(_bgCache, function(k, v) {
+                    if (v.complete == false || typeof v == 'undefined') {
+                        b = false;
+                    } else {
+                        _bc++;
                     }
-                    else
-                        {
-                            _bc++;
-            		}
-        	});
-        	$('#load_status p:eq(1)').html('èƒŒæ™¯è½½å…¥:'+_bc+'/'+_bgCache.length);
-            }		
-            $.each(_cgCache, function (k1, v1) 
-            {
-                if (v1.complete == false || typeof v1 == 'undefined')
-                { 
-                    c = false; 
+                });
+                $('#load_status p:eq(1)').html('±³¾°ÔØÈë:' + _bc + '/' + _bgCache.length);
+            }
+            $.each(_cgCache, function(k1, v1) {
+                if (v1.complete == false || typeof v1 == 'undefined') {
+                    c = false;
+                } else {
+                    _cc++;
                 }
-                else
-                    {
-            		_cc++;
-                    }
             });
-            $('#load_status p:eq(2)').html('ç«‹ç»˜è½½å…¥:'+_cc+'/'+_cgCache.length);
-            if (a && b && c)
-            {
-                setTimeout(_dramaBuilder,1300);
+            $('#load_status p:eq(2)').html('Á¢»æÔØÈë:' + _cc + '/' + _cgCache.length);
+            if (_items.length != 0) {
+                $.each(_itemsCache, function(k3, v3) {
+                    if (v3.complete == false || typeof v3 == 'undefined') {
+                        e = false;
+                    } else {
+                        _ec++;
+                    }
+                });
+                $('#load_status p:eq(3)').html('ËØ²Ä?Èë:' + _ec + '/' + _itemsCache.length);
             }
-            else 
-                {
-                    setTimeout(_checkCache,300);
-                }
+            if (a && b && c) {
+                setTimeout(_dramaBuilder, 1300);
+            } else {
+                setTimeout(_checkCache, 300);
+            }
         };
 
-        /**
-         * æ„é€ èˆå°å…ƒç´ (æ–‡æœ¬æ¡†,èƒŒæ™¯,ç«‹ç»˜)
-         *
-         * @access private
-         */
-        var _dramaBuilder = function () 
-        {
-            $(_obj).html('');   	
-            //èƒŒæ™¯å±‚æ„ç­‘       
-            $.each(_bg, function (k, v) 
-            {
+    /**
+     * ¹¹ÔìÎèÌ¨ÔªËØ(ÎÄ±¾¿ò,±³¾°,Á¢»æ)
+     *
+     * @access private
+     */
+    var _dramaBuilder = function() {
+            $(_obj).html('');
+            //±³¾°²ã¹¹Öş       
+            $.each(_bg, function(k, v) {
                 $(_obj).append('<div id="bg' + k + '" class="bg"></div>');
                 $('#bg' + k).css({
-                    'position' : 'absolute',
+                    'position': 'absolute',
                     'z-index': '-' + k,
                     'width': $('#wrapper').width(),
                     'height': $('#wrapper').height(),
-                    'top' : '-' + _y +'px',
-                    'left' : '-' + _x + 'px'
+                    'top': '-' + _y + 'px',
+                    'left': '-' + _x + 'px'
                 });
                 $('#bg' + k).append(_bgCache[k]);
-                if (typeof v['oStart'] != 'undefined') 
-                {
-                    $('#bglayout_' + k).css('opacity', parseInt(v['oStart']));
+                if (typeof v['oStart'] != 'undefined') {
+                    $('#bglayout_' + k).css('opacity', v['oStart']);
                 }
-                if (typeof v['moveStart'] != 'undefined') 
-                {
+                if (typeof v['moveStart'] != 'undefined') {
                     var _startPlace = v['moveStart'].split(" ");
                     $('#bglayout_' + k).css({
                         'left': (parseInt(_x) + parseInt(_startPlace[0])) + 'px',
@@ -1071,141 +1158,138 @@ var K_project = (function ($) {
             });
             $(_obj).prepend('<div id="sp_bg"></div><canvas id="cav_bg"></canvas>');
             $('#sp_bg').css({
-        	'width' : _width + 'px',
-                'height' : _height + 'px',
-                'position' : 'absolute',
-        	'z-index' : '2',
-        	'opacity' : '0',
-        	'background' : '#fff'
+                'width': _width + 'px',
+                'height': _height + 'px',
+                'position': 'absolute',
+                'z-index': '2',
+                'opacity': '0',
+                'background': '#fff'
             });
             $('#cav_bg').attr({
-        	'width' : _width,
-        	'height' : _height	
+                'width': _width,
+                'height': _height
             });
             $('#cav_bg').css({
-        	'opacity' : '0',
-        	'position' : 'absolute',
-        	'z-index' : '1'	
+                'opacity': '0',
+                'position': 'absolute',
+                'z-index': '1'
             });
-            //uiå±‚æ„ç­‘
-            $(_obj).prepend('<div id="ui"><div id="textarea"></div><div id="history"></div></div><button id="size">æŸ¥çœ‹æ–‡æœ¬</button>');
-            $('#ui,#size,#textarea,#history,#close_h').css('position','absolute');
+            //ui²ã¹¹Öş
+            $(_obj).prepend('<div id="ui"><div id="textarea"></div><div id="history"></div></div><button id="size">²é¿´ÎÄ±¾</button>');
+            $('#ui,#size,#textarea,#history,#close_h').css('position', 'absolute');
             $('#ui').css({
-        	'width' : (parseInt(_width) - 40) + 'px',
-        	'height' : (parseInt(_height) - 40) + 'px',
-        	'top' : '20px',
-        	'left' : '20px',
-        	'z-index' : '3'
+                'width': (parseInt(_width) - 40) + 'px',
+                'height': (parseInt(_height) - 40) + 'px',
+                'top': '20px',
+                'left': '20px',
+                'z-index': '3',
+                'background': '#000'
             });
             $('#size').css({
-                'width' : '100px',
-       		'height' : '25px',
-       		'bottom' : '20px',
-       		'right' : '20px',
-       		'z-index' : '6'	
+                'width': '100px',
+                'height': '25px',
+                'bottom': '20px',
+                'right': '20px',
+                'z-index': '11'
             });
             $('#textarea').css({
-       		'width' : (parseInt(_width) - 40) + 'px',
-       		'height' : '150px',
-       		'outline' : '1px #ccc solid',
-       		'z-index' : '4',
-       		'margin' : '0px',
-       		'overflow' : 'auto',
-       		'bottom' : '0px',
-       		'background-color' : 'rgba(0,0,0,0.1)'	
+                'width': (parseInt(_width) - 40) + 'px',
+                'height': '150px',
+                'outline': '1px #ccc solid',
+                'z-index': '10',
+                'margin': '0px',
+                'overflow': 'auto',
+                'bottom': '0px',
+                'background-color': 'rgba(0,0,0,0.5)'
             });
             $('#history').css({
-        	'width' : (parseInt(_width) - 40) + 'px',
-        	'height' : (parseInt(_height) - 40) + 'px',
-                'background-color' : 'rgba(0,0,0,0.9)',
-                'z-index' : '100',
-                'overflow' : 'auto',
-                'display' : 'none'
+                'width': (parseInt(_width) - 40) + 'px',
+                'height': (parseInt(_height) - 40) + 'px',
+                'background-color': 'rgba(0,0,0,0.9)',
+                'z-index': '100',
+                'overflow': 'auto',
+                'display': 'none'
             });
             $('#ui').click(_dialog);
             $('#size').click(_viewHistory);
-            for (var i = 1; i < 4; i++) 
-            {
+            for (var i = 1; i < 4; i++) {
                 $('#ui').append('<div class="cha" id="cha' + i + '"><img id="cha' + i + 'cg"/></div>');
             }
             $('#ui,#size').css('display', 'block');
         };
 
-	/**
-	 * èƒŒæ™¯ç‰¹æ•ˆæ‰§è¡Œ
-	 *
-         * @param int Args èƒŒæ™¯å±‚å·
-	 * @access private
-	*/
-	var _bgEvent = function (Args)
-	{
-            if (typeof _bg[Args]['rtime'] != 'undefined')
-            {
-		var _actionList=[];
-		if (typeof _bg[Args]['moveEnd'] != 'undefined')
-		{
+    /**
+     * ±³¾°ÌØĞ§Ö´ĞĞ
+     *
+     * @param int Args ±³¾°²ãºÅ
+     * @access private
+     */
+    var _bgEvent = function(Args) {
+            if (typeof _bg[Args]['rtime'] != 'undefined') {
+                var _actionList = [];
+                if (typeof _bg[Args]['moveEnd'] != 'undefined') {
                     var _endPlace = _bg[Args]['moveEnd'].split(" ");
                     _actionList['left'] = parseInt(_x) + parseInt(_endPlace[0]);
                     _actionList['top'] = parseInt(_y) + parseInt(_endPlace[1]);
-		}
-		if (typeof _bg[Args]['oEnd'] != 'undefined')
-		{
+                }
+                if (typeof _bg[Args]['oEnd'] != 'undefined') {
                     _actionList['opacity'] = parseInt(_bg[Args]['oEnd']);
-		}
-		$('#bglayout_' + Args).animate(_actionList, parseInt(_bg[Args]['rtime']), 'linear');
+                }
+                $('#bglayout_' + Args).animate(_actionList, parseInt(_bg[Args]['rtime']), 'linear');
             }
-	};
+        };
 
-    var _viewHistory = function (){
-        if (_history)
-        {
-            $('#history').fadeTo(500,0);
-            _history = false;
-            $('#size').text('æŸ¥çœ‹æ–‡æœ¬');
-            $('#ui').click(_dialog);
-        }
-        else
-            {
-                $('#history').fadeTo(500,1);
+    /**
+     * µ¯³öÀúÊ·ÎÄ±¾¿ò
+     *
+     * @access private
+     */
+    var _viewHistory = function() {
+            if (_history) {
+                $('#history').fadeTo(500, 0);
+                _history = false;
+                $('#size').text('²é¿´ÎÄ±¾');
+                $('#ui').click(_dialog);
+            } else {
+                $('#history').fadeTo(500, 1);
                 _history = true;
-                $('#size').text('å›åˆ°æ¸¸æˆ');
+                $('#size').text('»Øµ½ÓÎÏ·');
                 $('#ui').unbind();
             }
-    };
-    
+        };
+
     var _callbackObject = {
         /**
-        * è„šæœ¬è®¾ç½®
-        *
-        * @access public
-        * @param object Script æ€»è„šæœ¬(æ ¼å¼:json)
-        * @param object containerObject ä¸»èˆå°å…ƒç´ å¼•ç”¨(éjQueryå¯¹è±¡)
-        */
-        setScript: function (Script, containerObject) 
-        {
+         * ½Å±¾ÉèÖÃ
+         *
+         * @access public
+         * @param object Script ×Ü½Å±¾(¸ñÊ½:json)
+         * @param object containerObject Ö÷ÎèÌ¨ÔªËØÒıÓÃ(·ÇjQuery¶ÔÏó)
+         */
+        setScript: function(Script, containerObject) {
             _script = Script['dialogues'];
-            if (typeof Script['BG'] != 'undefined')
-            {
-            		_bg = Script['BG'];
+            if (typeof Script['BG'] != 'undefined') {
+                _bg = Script['BG'];
             }
-            if (typeof Script['audio'] != 'undefined')
-            {
-            		_audio = Script['audio'];
+            if (typeof Script['audio'] != 'undefined') {
+                _audio = Script['audio'];
+            }
+            if (typeof Script['items'] != 'undefined') {
+                _items = Script['items'];
             }
             _name = Script['D_Name'];
             _obj = containerObject;
             _width = Script['width'];
             _height = Script['height'];
+
         },
 
         /**
-        * åˆå§‹åŒ–,æ„é€ ä¸»èˆå°å°ºå¯¸
-        * 
-        * @access public
-        */
-        init: function () 
-        {
-        		
+         * ³õÊ¼»¯,¹¹ÔìÖ÷ÎèÌ¨³ß´ç
+         *
+         * @access public
+         */
+        init: function() {
             $('title').html(_name);
             _x = ($('#wrapper').width()) / 2;
             _y = ($('#wrapper').height()) / 2;
@@ -1216,19 +1300,20 @@ var K_project = (function ($) {
                 'outline': '1px solid #fff',
                 'left': _x + 'px',
                 'top': _y + 'px',
-                'overflow' : 'hidden'
+                'overflow': 'hidden'
             });
             $(_obj).width(_width);
             $(_obj).height(_height);
-            $(_obj).html('<div id="load_status"><p>Now Loading...</p><p></p><p></p><p></p></div>');      
+            $(_obj).html('<div id="load_status"><p>Now Loading...</p><p></p><p></p><p></p><p></p></div>');
             _cgCacheFunc();
-            if (_bg.length != 0)
-            {
-            		_bgCacheFunc();
+            if (_bg.length != 0) {
+                _bgCacheFunc();
             }
-            if (_audio.length != 0)
-            {
-            	_auCacheFunc();
+            if (_audio.length != 0) {
+                _auCacheFunc();
+            }
+            if (_items.length != 0) {
+                _itemsCacheFunc();
             }
             _checkCache();
         }
